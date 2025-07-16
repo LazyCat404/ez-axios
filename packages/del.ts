@@ -22,11 +22,11 @@ export default function del(url: string, ...theArgs: any[]): Promise<any> {
           if (item.toLowerCase() === 'query' || item.toLowerCase() === 'json') {
             requestType = item.toLowerCase();
           } else {
-            console.error('请求参数仅支持 Object、Array 类型');
+            console.error('ezAxios: 请求参数仅支持 Object、Array 类型');
           }
         } else {
           if (params) {
-            console.error('请求参数仅支持 Object、Array 类型');
+            console.error('ezAxios: 请求参数仅支持 Object、Array 类型');
           }
         }
       } else if (i < 3) {
@@ -36,13 +36,13 @@ export default function del(url: string, ...theArgs: any[]): Promise<any> {
           if (item.toLowerCase() === 'query' || item.toLowerCase() === 'json') {
             requestType = item.toLowerCase();
           } else {
-            console.warn('存在无法处理的参数类型，这可能会影响您的程序');
+            console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
           }
         } else {
-          console.warn('存在无法处理的参数类型，这可能会影响您的程序');
+          console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
         }
       } else {
-        console.warn('接收到多余参数，已忽略');
+        console.warn('ezAxios: 接收到多余参数，已忽略');
       }
     });
   }

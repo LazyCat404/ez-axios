@@ -27,6 +27,27 @@ export default function ezAxios(customOptions?: ezAxiosOptions): AxiosInstance {
       }
       removePending(config); // 在请求开始前，对之前的请求做检查取消操作
       addPending(config); // 将当前请求添加到 pending 中
+      // 移除标记
+      if (targetOptions.mark && config.url) {
+        const interfaceUrl = <string>config.url;
+        if (typeof targetOptions.mark == 'string') {
+          if (interfaceUrl.startsWith(`/${targetOptions.mark}`)) {
+            config.url = interfaceUrl.replace(`/${targetOptions.mark}`, '');
+          }
+        } else if (Array.isArray(targetOptions.mark)) {
+          for (let i = 0; i < targetOptions.mark.length; i++) {
+            if (typeof targetOptions.mark[i] == 'string') {
+              if (interfaceUrl.startsWith(`/${targetOptions.mark[i]}`)) {
+                config.url = interfaceUrl.replace(`/${targetOptions.mark[i]}`, '');
+              }
+            } else {
+              console.warn(`ezAxios: mark 存在无法解析类型，已忽略`);
+            }
+          }
+        } else {
+          console.error(`ezAxios: mark 参数类型错误，请传入字符串或数组`);
+        }
+      }
       // 设置请求头
       for (const key in targetOptions.headers) {
         config.headers[key] = targetOptions.headers[key];

@@ -2,6 +2,7 @@ export interface ezAxiosOptions {
   timeout?: number; // 请求超时时间
   briefly?: boolean; // 简要数据结构
   baseURL?: string; // 基础地址
+  mark?: string | Array<string>; // 代理标记
   loading?: boolean; // 是否显示加载动画
   headers?: Record<string, string>; // 请求头
   /*eslint no-unused-vars:*/
@@ -11,6 +12,7 @@ export interface ezAxiosOptions {
 // 默认配置
 const defaultOptions: ezAxiosOptions = {
   baseURL: '',
+  mark: '',
   timeout: 30000,
   briefly: true,
   loading: true,

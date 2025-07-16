@@ -2,6 +2,12 @@
 
 > 基于axios的二次封装
 
+## 安装
+
+```js
+npm install ez-axios
+```
+
 ## 快速使用
 
 ```js
@@ -24,7 +30,7 @@ api.login({name: 'test'}).then(res => {
 
 ## 全局配置
 
-> 通过自定义配置，统一处全局规则，如：请求头、请求超时时间等。全局配置需要写在使用请求之前，且请求配置项会覆盖全局配置，如果你是 VUE 项目，可以在 `main.js` 中引入。
+> 通过自定义配置，统一配置全局规则，如：请求头、请求超时时间等。全局配置需要写在使用请求之前，且请求配置项会覆盖全局配置，如果你是 VUE 项目，可以在 `main.js` 中引入。
 
 ```js
 // main.js
@@ -32,6 +38,7 @@ import ezAxios from 'ez-axios';
 
 ezAxios({
   baseURL: '', // 基础地址
+  mark: '', // 标记
   timeout: 30000, // 请求超时时间
   briefly: true, // 简要数据结构
   loading: true, // 是否显示加载动画
@@ -69,6 +76,30 @@ ezAxios({
       }
     }
   );
+  ```
+
+- 配置`mark`后，请求`Url`若以`mark`开头，则标记会被删除
+
+  ```js
+  ezAxios({
+    mark: 'api' // 标记
+  });
+
+  get('/api/url'); // 发起请求时，/api 会被删除，请求地址会变为：/url
+  ```
+
+  > 此配置多用于处理代理标记，可根据当前环境信息，设置不同的标记
+
+  ```js
+  // 例1：
+  ezAxios({
+    mark: process.env.NODE_ENV === 'production' ? 'api' : ''
+  });
+
+  // 例2：
+  ezAxios({
+    mark: import.meta.env.MODE === 'production' ? ['api', 'test', 'mock'] : ''
+  });
   ```
 
 - 从第三个参数开始，后面的参数均为**可选参数**，**不限制顺序**，**不区分大小写**。
