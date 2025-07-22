@@ -62,6 +62,81 @@ ezAxios({
 
   - `requestType`、`responseType`：可同时指定，如：`post('/url',{name: 'test'},'query','blob')`。
 
+### json、query、form-data
+
+> `json`、`query`、`form-data` 三种请求参数类型，`ez-axios` 会自动处理，无需手动设置请求头。
+
+```js
+// json
+get('/user/login', { name: 'test' }, 'json');
+
+// query
+get('/user/login', { name: 'test' }, 'query');
+
+// form-data
+post('/user/login', { name: 'test' }, 'form-data');
+```
+
+### 文件上传
+
+> 实际应用中，上传文件是十分常见业务场景，使用`ez-axios`可快速处理文件对象，实现上传功能。
+
+```js
+const api = {
+  file: (par: any): Promise<any> => post('/user/login', par, 'file')
+};
+
+// 文件上传测试;
+const fileList = [
+  new File(['123'], '123.txt', { type: 'text/plain' }),
+  new File(['456'], '456.txt', { type: 'text/plain' })
+];
+
+// 例1: json + file
+api.file({ username: 'test', password: '123456', fileList }).then(res => {
+  console.log('File Response:', res);
+});
+
+// 例2：file 对象
+api.file({ file1: fileList[0], file2: fileList[1] }).then(res => {
+    console.log('File Response:', res);
+});
+
+// 例3：file 数组
+api.file(fileList).then(res => {
+    console.log('File Response:', res);
+});
+```
+
+### 文件下载
+
+> `ez-axios` 设置，返回值类型为 `blob`，即可快速下载文件。
+
+```js
+const api = {
+  download: (par: any): Promise<any> => get('https://fastly.picsum.photos/id/323/400/300.jpg?hmac=2EbkxdMp9KT6S3wGeqfaU_VnIMkzCzZFULpOD6M_0Po', par, 'blob')
+};
+
+api.download().then((res: any) => {
+  if (res instanceof Blob) {
+    const aLink = document.createElement('a');
+    document.body.appendChild(aLink);
+    aLink.style.display = 'none';
+    const blobUrl = window.URL.createObjectURL(res);
+    aLink.download = '400x300.jpg';
+    aLink.href = blobUrl;
+    aLink.click();
+    document.body.removeChild(aLink);
+  } else {
+    // 参数不配置 'blob' 时，则无法正确下载
+    console.error('请确认下载类型');
+  }
+});
+
+```
+
+### 自定义设置
+
 - 可单独设置`请求头`、`请求超时时间`、`简要数据结构`、`是否显示加载动画`、`错误处理`，会覆盖全局配置。
 
   ```js
@@ -113,8 +188,11 @@ const api = {
   login: (par: any, par1?: any): Promise<any> => get('/user/login', par, par1)
 };
 
-
-
+// 重复请求
+api.login({ username: 'test', password: '123456' }).then(res => {
+  console.log('Login Response1:', res);
+});
+// 手动取消
 const controller = new AbortController(); // 创建一个控制器
 api
   .login(

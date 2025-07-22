@@ -5,28 +5,24 @@ ezAxios({
   baseURL: 'http://rap2api.taobao.org/app/mock/307564'
 });
 
-const controller = new AbortController();
-
 const api = {
   login: (par: any, par1?: any): Promise<any> => post('/user/login', par, par1)
 };
 
+// 重复请求
 api.login({ username: 'test', password: '123456' }).then(res => {
   console.log('Login Response1:', res);
 });
-
-api.login({ username: 'test', password: '123456' }).then(res => {
-  console.log('Login Response2:', res);
-});
-
+// 手动取消
+const controller = new AbortController(); // 创建一个控制器
 api
   .login(
     { username: 'test', password: '123456' },
     {
-      signal: controller.signal
+      signal: controller.signal // 传递控制器
     }
   )
   .then(res => {
     console.log('Login Response3:', res);
   });
-controller.abort(); // 手动取消
+// controller.abort(); // 取消请求
