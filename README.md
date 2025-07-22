@@ -104,9 +104,34 @@ ezAxios({
 
 - 从第三个参数开始，后面的参数均为**可选参数**，**不限制顺序**，**不区分大小写**。
 
+## 手动取消
+
+> `ez-axios` 支持手动取消，但无法全局配置，仅针对单个请求取消，使用方式如下：
+
+```js
+const api = {
+  login: (par: any, par1?: any): Promise<any> => get('/user/login', par, par1)
+};
+
+
+
+const controller = new AbortController(); // 创建一个控制器
+api
+  .login(
+    { username: 'test', password: '123456' },
+    {
+      signal: controller.signal // 传递控制器
+    }
+  )
+  .then(res => {
+    console.log('Login Response3:', res);
+  });
+controller.abort();  // 取消请求
+```
+
 ## 后续优化方向
 
-- 手动取消
+- 手动取消（开发中）
 
 - 切片、断点续传
 

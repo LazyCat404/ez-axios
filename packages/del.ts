@@ -30,16 +30,18 @@ export default function del(url: string, ...theArgs: any[]): Promise<any> {
           }
         }
       } else if (i < 3) {
-        if (Object.prototype.toString.call(item) == '[object Object]') {
-          customOptions = item;
-        } else if (typeof item == 'string') {
-          if (item.toLowerCase() === 'query' || item.toLowerCase() === 'json') {
-            requestType = item.toLowerCase();
+        if (item) {
+          if (Object.prototype.toString.call(item) == '[object Object]') {
+            customOptions = item;
+          } else if (typeof item == 'string') {
+            if (item.toLowerCase() === 'query' || item.toLowerCase() === 'json') {
+              requestType = item.toLowerCase();
+            } else {
+              console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
+            }
           } else {
             console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
           }
-        } else {
-          console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
         }
       } else {
         console.warn('ezAxios: 接收到多余参数，已忽略');
@@ -49,7 +51,7 @@ export default function del(url: string, ...theArgs: any[]): Promise<any> {
   return new Promise((resolve, reject) => {
     if (requestType === 'query') {
       ezAxios(customOptions)
-        .delete(url, { params })
+        .delete(url, { params, signal: customOptions?.signal })
         .then(res => {
           resolve(res);
         })
@@ -58,7 +60,7 @@ export default function del(url: string, ...theArgs: any[]): Promise<any> {
         });
     } else {
       ezAxios(customOptions)
-        .delete(url, { data: params })
+        .delete(url, { data: params, signal: customOptions?.signal })
         .then(res => {
           resolve(res);
         })

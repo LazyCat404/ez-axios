@@ -42,25 +42,27 @@ export default function put(url: string, ...theArgs: any[]): Promise<any> {
           }
         }
       } else if (i < 4) {
-        if (Object.prototype.toString.call(item) == '[object Object]') {
-          customOptions = item;
-        } else if (typeof item == 'string') {
-          if (item.toLowerCase() === 'blob') {
-            responseType = 'blob';
-          } else if (
-            item.toLowerCase() === 'json' ||
-            item.toLowerCase() === 'query' ||
-            item.toLowerCase() === 'file' ||
-            item.toLowerCase() === 'data' ||
-            item.toLowerCase() === 'form-data' ||
-            item.toLowerCase() === 'formdata'
-          ) {
-            requestType = item.toLowerCase();
+        if (item) {
+          if (Object.prototype.toString.call(item) == '[object Object]') {
+            customOptions = item;
+          } else if (typeof item == 'string') {
+            if (item.toLowerCase() === 'blob') {
+              responseType = 'blob';
+            } else if (
+              item.toLowerCase() === 'json' ||
+              item.toLowerCase() === 'query' ||
+              item.toLowerCase() === 'file' ||
+              item.toLowerCase() === 'data' ||
+              item.toLowerCase() === 'form-data' ||
+              item.toLowerCase() === 'formdata'
+            ) {
+              requestType = item.toLowerCase();
+            } else {
+              console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
+            }
           } else {
             console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
           }
-        } else {
-          console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
         }
       } else {
         console.warn('ezAxios: 接收到多余参数，已忽略');
@@ -74,7 +76,7 @@ export default function put(url: string, ...theArgs: any[]): Promise<any> {
   return new Promise((resolve, reject) => {
     if (requestType === 'query') {
       ezAxios(customOptions)
-        .put(url, null, { params })
+        .put(url, null, { params, signal: customOptions?.signal })
         .then(res => {
           resolve(res);
         })
@@ -109,7 +111,7 @@ export default function put(url: string, ...theArgs: any[]): Promise<any> {
         }
       }
       ezAxios(customOptions)
-        .put(url, formData, { responseType })
+        .put(url, formData, { responseType, signal: customOptions?.signal })
         .then(res => {
           resolve(res);
         })
@@ -118,7 +120,7 @@ export default function put(url: string, ...theArgs: any[]): Promise<any> {
         });
     } else if (requestType === 'data' || requestType === 'form-data' || requestType === 'formdata') {
       ezAxios(customOptions)
-        .put(url, QS.stringify(params), { responseType })
+        .put(url, QS.stringify(params), { responseType, signal: customOptions?.signal })
         .then(res => {
           resolve(res);
         })
@@ -127,7 +129,7 @@ export default function put(url: string, ...theArgs: any[]): Promise<any> {
         });
     } else {
       ezAxios(customOptions)
-        .put(url, params, { responseType })
+        .put(url, params, { responseType, signal: customOptions?.signal })
         .then(res => {
           resolve(res);
         })

@@ -67,7 +67,14 @@ export default function ezAxios(customOptions?: ezAxiosOptions): AxiosInstance {
     },
     error => {
       Loading.close();
-      if (error.response) {
+      if (!error) return;
+      if (axios.isCancel(error)) {
+        if (error.message == 'canceled') {
+          return Promise.reject(`ezAxios: 请求：${(error as any).config.url} 已取消`);
+        } else {
+          return Promise.reject(`ezAxios: 连续的重复请求，已取消 \n 错误信息：${error.message}`);
+        }
+      } else if (error.response) {
         if (targetOptions.error) {
           targetOptions.error(error.response.status);
         }

@@ -30,16 +30,18 @@ export default function get(url: string, ...theArgs: any[]): Promise<any> {
           }
         }
       } else if (i < 3) {
-        if (Object.prototype.toString.call(item) == '[object Object]') {
-          customOptions = item;
-        } else if (typeof item == 'string') {
-          if (item.toLowerCase() === 'blob') {
-            responseType = 'blob';
+        if (item) {
+          if (Object.prototype.toString.call(item) == '[object Object]') {
+            customOptions = item;
+          } else if (typeof item == 'string') {
+            if (item.toLowerCase() === 'blob') {
+              responseType = 'blob';
+            } else {
+              console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
+            }
           } else {
             console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
           }
-        } else {
-          console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
         }
       } else {
         console.warn('ezAxios: 接收到多余参数，已忽略');
@@ -48,7 +50,7 @@ export default function get(url: string, ...theArgs: any[]): Promise<any> {
   }
   return new Promise((resolve, reject) => {
     ezAxios(customOptions)
-      .get(url, { params, responseType })
+      .get(url, { params, responseType, signal: customOptions?.signal })
       .then(res => {
         resolve(res);
       })
