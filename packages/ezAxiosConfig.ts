@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 export interface ezAxiosOptions {
   timeout?: number; // 请求超时时间
   briefly?: boolean; // 简要数据结构
@@ -7,6 +9,7 @@ export interface ezAxiosOptions {
   headers?: Record<string, string>; // 请求头
   /*eslint no-unused-vars:*/
   error?: (status: number) => void; // 错误处理
+  success?: (response: AxiosResponse) => void; // 请求拦截
 }
 
 // 默认配置
@@ -17,7 +20,8 @@ const defaultOptions: ezAxiosOptions = {
   briefly: true,
   loading: true,
   headers: {},
-  error: errorHandling
+  error: errorHandling,
+  success: undefined
 };
 
 // 自定义配置

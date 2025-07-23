@@ -63,6 +63,10 @@ export default function ezAxios(customOptions?: ezAxiosOptions): AxiosInstance {
     (response: AxiosResponse) => {
       Loading.close();
       removePending(response.config); // 在请求结束后，移除本次请求
+      // 成功回调
+      if (targetOptions.success) {
+        targetOptions.success(response);
+      }
       return Promise.resolve(targetOptions.briefly ? response.data : response);
     },
     error => {

@@ -44,6 +44,7 @@ ezAxios({
   loading: true, // 是否显示加载动画
   headers: {}, // 请求头
   error: status => {} // 错误处理
+  success: undefined // 成功处理，response => {}
 });
 
 // 全局配置项均为非必填，以上值为内置默认值。
@@ -209,8 +210,8 @@ controller.abort();  // 取消请求
 
 ## 后续优化方向
 
-- 手动取消（开发中）
-
 - 切片、断点续传
 
 - 请求进度条
+
+- （自动）请求重试
