@@ -1,5 +1,6 @@
 import ezAxios, { post } from '../packages/index';
 
+sessionStorage.removeItem('token');
 ezAxios({
   baseURL: 'http://rap2api.taobao.org/app/mock/307564'
 });

@@ -44,10 +44,23 @@ ezAxios({
   loading: true, // 是否显示加载动画
   headers: {}, // 请求头
   error: status => {} // 错误处理
-  success: undefined // 成功处理，response => {}
+  success: undefined // 成功处理（1.1.0 新增），response => {}
 });
 
 // 全局配置项均为非必填，以上值为内置默认值。
+```
+
+### AloneSet（1.1.1 新增）
+
+> ez-axios 提供了 `AloneSet` 方法类，可以更灵活的对全局的某一项进行修改。
+
+```js
+import { AloneSet } from 'ez-axios';
+
+AloneSet.header = {
+  token: 'k7r+vB0fj+dqxcRF3ts9G7E+K191C'
+};
+AloneSet.loading = false;
 ```
 
 ## 请求方法参数说明
@@ -180,7 +193,7 @@ api.download().then((res: any) => {
 
 - 从第三个参数开始，后面的参数均为**可选参数**，**不限制顺序**，**不区分大小写**。
 
-## 手动取消
+## 手动取消（1.1.0 新增）
 
 > `ez-axios` 支持手动取消，但无法全局配置，仅针对单个请求取消，使用方式如下：
 
