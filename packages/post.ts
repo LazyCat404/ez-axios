@@ -6,14 +6,14 @@ import QS from 'qs';
  * @param { String } url 接口地址
  * @param { Record<string, string> | Array | File } params [请求参数]：只能作为第二个参数
  * @param { String } requestType [请求参数类型]：json（默认）、query、file、data
- * @param { String } responseType [返回值类型]：（多用于下载）blob，请参数类型为query时失效
+ * @param { String } responseType [返回值类型]：多用于下载
  * @param { ezAxiosOptions } customOptions [自定义设置]：不可作为前两个参数，会覆盖全局配置
  * @returns post 请求的 Promise 处理
  */
 export default function post(url: string, ...theArgs: any[]): Promise<any> {
   // 参数处理
   let params: any = null;
-  let requestType: any = null;
+  let requestType: any = 'json';
   let responseType: any = 'json';
   let customOptions: any = null;
   if (theArgs.length) {
@@ -22,10 +22,18 @@ export default function post(url: string, ...theArgs: any[]): Promise<any> {
         if (typeof item == 'object') {
           params = item;
         } else if (typeof item == 'string') {
-          if (item.toLowerCase() === 'blob') {
-            responseType = 'blob';
+          if (item.toLowerCase() === 'json') {
+            responseType = 'json';
+            responseType = 'json';
           } else if (
-            item.toLowerCase() === 'json' ||
+            item.toLowerCase() === 'text' ||
+            item.toLowerCase() === 'document' ||
+            item.toLowerCase() === 'stream' ||
+            item.toLowerCase() === 'blob' ||
+            item.toLowerCase() === 'arraybuffer'
+          ) {
+            responseType = item.toLowerCase();
+          } else if (
             item.toLowerCase() === 'query' ||
             item.toLowerCase() === 'file' ||
             item.toLowerCase() === 'data' ||
@@ -46,10 +54,18 @@ export default function post(url: string, ...theArgs: any[]): Promise<any> {
           if (Object.prototype.toString.call(item) == '[object Object]') {
             customOptions = item;
           } else if (typeof item == 'string') {
-            if (item.toLowerCase() === 'blob') {
-              responseType = 'blob';
+            if (item.toLowerCase() === 'json') {
+              responseType = 'json';
+              responseType = 'json';
             } else if (
-              item.toLowerCase() === 'json' ||
+              item.toLowerCase() === 'text' ||
+              item.toLowerCase() === 'document' ||
+              item.toLowerCase() === 'stream' ||
+              item.toLowerCase() === 'blob' ||
+              item.toLowerCase() === 'arraybuffer'
+            ) {
+              responseType = item.toLowerCase();
+            } else if (
               item.toLowerCase() === 'query' ||
               item.toLowerCase() === 'file' ||
               item.toLowerCase() === 'data' ||
@@ -68,10 +84,10 @@ export default function post(url: string, ...theArgs: any[]): Promise<any> {
         console.warn('ezAxios: 接收到多余参数，已忽略');
       }
     });
-    // 提示
-    if (responseType != 'json' && requestType == 'query') {
-      console.warn('ezAxios: 请参数类型为query时，设置返回值类型无效');
-    }
+    // // 提示
+    // if (requestType == 'query'&& responseType != 'json' ) {
+    //   console.warn('ezAxios: 请参数类型为query时，设置返回值类型无效');
+    // }
   }
   return new Promise((resolve, reject) => {
     if (requestType === 'query') {

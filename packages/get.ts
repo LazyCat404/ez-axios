@@ -4,7 +4,7 @@ import ezAxios from './ezAxios';
  * @description get 方法，对应 get 请求
  * @param { String } url 接口地址
  * @param { Record<string, string> | Array } params [请求参数]：只能作为第二个参数
- * @param { String } responseType [返回值类型]：（多用于下载）blob
+ * @param { String } responseType [返回值类型]：多用于下载
  * @param { ezAxiosOptions } customOptions [自定义设置]：不可作为前两个参数，会覆盖全局配置
  * @returns get 请求的 Promise 处理
  */
@@ -19,8 +19,15 @@ export default function get(url: string, ...theArgs: any[]): Promise<any> {
         if (typeof item == 'object') {
           params = item;
         } else if (typeof item == 'string') {
-          if (item.toLowerCase() === 'blob') {
-            responseType = 'blob';
+          if (
+            item.toLowerCase() === 'json' ||
+            item.toLowerCase() === 'text' ||
+            item.toLowerCase() === 'document' ||
+            item.toLowerCase() === 'stream' ||
+            item.toLowerCase() === 'blob' ||
+            item.toLowerCase() === 'arraybuffer'
+          ) {
+            responseType = item.toLowerCase();
           } else {
             console.error('ezAxios: 请求参数仅支持 Object、Array类型');
           }
@@ -34,8 +41,15 @@ export default function get(url: string, ...theArgs: any[]): Promise<any> {
           if (Object.prototype.toString.call(item) == '[object Object]') {
             customOptions = item;
           } else if (typeof item == 'string') {
-            if (item.toLowerCase() === 'blob') {
-              responseType = 'blob';
+            if (
+              item.toLowerCase() === 'json' ||
+              item.toLowerCase() === 'text' ||
+              item.toLowerCase() === 'document' ||
+              item.toLowerCase() === 'stream' ||
+              item.toLowerCase() === 'blob' ||
+              item.toLowerCase() === 'arraybuffer'
+            ) {
+              responseType = item.toLowerCase();
             } else {
               console.warn('ezAxios: 存在无法处理的参数类型，这可能会影响您的程序');
             }
